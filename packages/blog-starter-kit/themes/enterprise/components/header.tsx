@@ -8,22 +8,19 @@ import HamburgerSVG from './icons/svgs/HamburgerSVG';
 import { PublicationLogo } from './publication-logo';
 import PublicationSidebar from './sidebar';
 
-// Placeholder for the new logo component
-const NewLogo = () => (
-  <div className="text-2xl font-bold text-white">
-    Bestin<span className="text-blue-500">SG</span>
-  </div>
-);
+function hasUrl(
+  navbarItem: PublicationNavbarItem,
+): navbarItem is PublicationNavbarItem & { url: string } {
+  return !!navbarItem.url && navbarItem.url.length > 0;
+}
 
 export const Header = () => {
-  const [isSidebarVisible, setIsSidebarVisible] = useState<boolean>(false);
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || '/';
+  const [isSidebarVisible, setIsSidebarVisible] = useState<boolean>();
   const { publication } = useAppContext();
-
-  const menuItems = [
-    { label: 'Best Maid Agency', url: '#' },
-    { label: 'Best Part-Time Maid Agency', url: '#' },
-    { label: 'Best Indian Agency', url: '#' },
-  ];
+  const navbarItems = publication.preferences.navbarItems.filter(hasUrl);
+  const visibleItems = navbarItems.slice(0, 3);
+  const hiddenItems = navbarItems.slice(3);
 
   const toggleSidebar = () => {
     setIsSidebarVisible((prevVisibility) => !prevVisibility);
@@ -31,7 +28,7 @@ export const Header = () => {
 
   const navList = (
     <ul className="flex flex-row items-center gap-4 text-white">
-      {menuItems.map((item) => (
+      {visibleItems.map((item) => (
         <li key={item.url}>
           <a
             href={item.url}
@@ -43,6 +40,39 @@ export const Header = () => {
           </a>
         </li>
       ))}
+
+      {hiddenItems.length > 0 && (
+        <li>
+          <DropdownMenu.Root>
+            <DropdownMenu.Trigger asChild>
+              <button className="transition-200 block rounded-full p-2 transition-colors hover:bg-white hover:text-black dark:hover:bg-neutral-800 dark:hover:text-white">
+                More
+              </button>
+            </DropdownMenu.Trigger>
+
+            <DropdownMenu.Portal>
+              <DropdownMenu.Content
+                className="w-48 rounded border border-gray-300 bg-white text-neutral-950 shadow-md dark:border-neutral-800 dark:bg-neutral-900 dark:text-white"
+                align="end"
+                sideOffset={5}
+              >
+                {hiddenItems.map((item) => (
+                  <DropdownMenu.Item asChild key={item.url}>
+                    <a
+                      href={item.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="transition-200 block truncate p-2 transition-colors hover:bg-slate-100 hover:text-black dark:hover:bg-neutral-800 dark:hover:text-white"
+                    >
+                      {item.label}
+                    </a>
+                  </DropdownMenu.Item>
+                ))}
+              </DropdownMenu.Content>
+            </DropdownMenu.Portal>
+          </DropdownMenu.Root>
+        </li>
+      )}
     </ul>
   );
 
@@ -60,16 +90,43 @@ export const Header = () => {
             />
 
             {isSidebarVisible && (
-              <PublicationSidebar navbarItems={menuItems} toggleSidebar={toggleSidebar} />
+              <PublicationSidebar navbarItems={navbarItems} toggleSidebar={toggleSidebar} />
             )}
           </div>
           <div className="hidden lg:block">
-            <NewLogo />
+            <div className="text-2xl font-bold text-white">
+              Bestin<span className="text-blue-500">SG</span>
+            </div>
           </div>
         </div>
 
         <nav className="col-span-2 hidden lg:flex justify-center">
-          {navList}
+          <ul className="flex flex-row items-center gap-4 text-white">
+            <li>
+              <a
+                href="#"
+                className="transition-200 block max-w-[200px] truncate text-ellipsis whitespace-nowrap rounded-full p-2 transition-colors hover:bg-white hover:text-black dark:hover:bg-neutral-800 dark:hover:text-white"
+              >
+                Best Maid Agency
+              </a>
+            </li>
+            <li>
+              <a
+                href="#"
+                className="transition-200 block max-w-[200px] truncate text-ellipsis whitespace-nowrap rounded-full p-2 transition-colors hover:bg-white hover:text-black dark:hover:bg-neutral-800 dark:hover:text-white"
+              >
+                Best Part-Time Maid Agency
+              </a>
+            </li>
+            <li>
+              <a
+                href="#"
+                className="transition-200 block max-w-[200px] truncate text-ellipsis whitespace-nowrap rounded-full p-2 transition-colors hover:bg-white hover:text-black dark:hover:bg-neutral-800 dark:hover:text-white"
+              >
+                Best Indian Agency
+              </a>
+            </li>
+          </ul>
         </nav>
 
         <div className="col-span-1 hidden lg:flex justify-end items-center">
@@ -82,7 +139,9 @@ export const Header = () => {
       </Container>
 
       <div className="mt-5 flex justify-center lg:hidden">
-        <NewLogo />
+        <div className="text-2xl font-bold text-white">
+          Bestin<span className="text-blue-500">SG</span>
+        </div>
       </div>
     </header>
   );
