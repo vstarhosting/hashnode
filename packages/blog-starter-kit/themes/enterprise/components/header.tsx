@@ -1,9 +1,11 @@
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { useState } from 'react';
+import { PublicationNavbarItem } from '../generated/graphql';
 import { Button } from './button';
 import { Container } from './container';
 import { useAppContext } from './contexts/appContext';
 import HamburgerSVG from './icons/svgs/HamburgerSVG';
+import { PublicationLogo } from './publication-logo';
 import PublicationSidebar from './sidebar';
 
 // Placeholder for the new logo component
