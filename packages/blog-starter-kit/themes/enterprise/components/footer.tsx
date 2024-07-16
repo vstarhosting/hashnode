@@ -13,7 +13,7 @@ export const Footer = () => {
 					<div className="mb-20 flex w-full flex-row justify-center">
 						<Link
 							href={'/'}
-							aria-label={${publication.title} home page}
+							aria-label={`${publication.title} home page`}
 							className="flex flex-row items-center gap-5"
 						>
 							<img className="block w-40" src={PUBLICATION_LOGO} alt={publication.title} />
@@ -146,4 +146,4 @@ export const Footer = () => {
 			</Container>
 		</footer>
 	);
-}; 
+};
